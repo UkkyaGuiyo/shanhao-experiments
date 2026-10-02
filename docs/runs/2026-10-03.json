@@ -1,0 +1,104 @@
+{
+  "week": "2026-10-03",
+  "version": 1,
+  "status": "verified",
+  "base_commit": "6e9506941b614ca2998dfa53301ed43779ca52f1",
+  "environment": {
+    "system": "Linux",
+    "release": "6.18.44",
+    "machine": "x86_64",
+    "python": "3.12.14",
+    "dependencies": "Python standard library only"
+  },
+  "smoke": {
+    "command": "python3 -B -m hello_world.cli run --run-id release-20261003",
+    "exit_code": 0,
+    "stdout_hex": "48454c4c4f20574f524c440a",
+    "stdout_bytes": 12,
+    "exact_output": true,
+    "elapsed_seconds": 0.104754,
+    "stderr_bytes": 96
+  },
+  "tests": {
+    "command": "python3 -B -m unittest discover -s tests -v",
+    "exit_code": 0,
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "elapsed_seconds": 3.837987,
+    "clean_readme_reproduction": "passed",
+    "previous_week_regression": "not applicable: first week"
+  },
+  "limits": {
+    "mode": "smoke-only",
+    "wall_seconds": 10,
+    "generated_file_budget_bytes": 33554432,
+    "artifact_count_limit": 4,
+    "artifact_bytes_limit_each": 65536,
+    "captured_output_bytes_limit": 65536,
+    "observed_process_configuration": {
+      "supervisor": {
+        "address_space_bytes": 67108864,
+        "cpu_seconds": 2,
+        "cpus": [
+          0
+        ],
+        "file_bytes": 1048576
+      },
+      "worker": {
+        "address_space_bytes": 201326592,
+        "cpu_seconds": 8,
+        "cpus": [
+          0
+        ],
+        "file_bytes": 1048576
+      }
+    },
+    "live_checks": {
+      "cpu_affinity": "passed",
+      "address_space_memory_error": "passed",
+      "cpu_sigkill_at_lowered_1_second_probe": "passed",
+      "file_efbig": "passed",
+      "timeout_and_reaping": "passed",
+      "output_cap": "passed",
+      "heavy_rejected": "passed"
+    },
+    "isolation": "process-local limits and reviewed finite code; no OS-wide network/filesystem or cgroup isolation"
+  },
+  "artifacts": [
+    {
+      "file": "ballot.json",
+      "bytes": 2782,
+      "sha256": "e37384a2e65c7acf8e0ce9ae058e966c466bbf034077949883dbf541a36828fd"
+    },
+    {
+      "file": "certificate.json",
+      "bytes": 2636,
+      "sha256": "8b3bd6177affaadda7ae855d6119e4d51d9bdb6d2e5c2e877f85dc1a351d13b5"
+    },
+    {
+      "file": "minutes.json",
+      "bytes": 1450,
+      "sha256": "dfc8091ce349f347215bdd1ea401922bfe50ac779885252e4e7a78d5c3c52b93"
+    },
+    {
+      "file": "proposal.json",
+      "bytes": 692,
+      "sha256": "3bbaf50c57a25535916874b84e446b4415d417be835257179d827456e255c400"
+    }
+  ],
+  "generated_artifact_bytes": 7560,
+  "release_guards": {
+    "duplicate_week": "tested: zero publication calls",
+    "remote_conflict": "tested: zero publication calls",
+    "stop": "tested: zero publication calls",
+    "no_lock": "tested: zero publication calls",
+    "test_or_review_failure": "tested: zero publication calls"
+  },
+  "review": {
+    "pre_execution_static_review": "completed; reviewed fixes covered by regression tests",
+    "final_release_review": "completed: no release-blocking findings"
+  },
+  "ci": "no pre-existing workflow in the starting repository; no paid or external CI added",
+  "tested_code_tree": "b26b9ed4e258336536592782607f21a6dfb6a052"
+}
