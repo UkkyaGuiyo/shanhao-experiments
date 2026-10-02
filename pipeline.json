@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "seed": 20261003,
+  "weeks": ["2026-10-03"],
+  "steps": [
+    {"id": "proposal", "week": "2026-10-03", "module": "w20261003", "requires": null},
+    {"id": "ballot", "week": "2026-10-03", "module": "w20261003", "requires": "proposal"},
+    {"id": "certificate", "week": "2026-10-03", "module": "w20261003", "requires": "ballot"},
+    {"id": "minutes", "week": "2026-10-03", "module": "w20261003", "requires": "certificate"}
+  ]
+}

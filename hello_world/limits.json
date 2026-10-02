@@ -1,0 +1,15 @@
+{
+  "mode": "smoke",
+  "wall_seconds": 10,
+  "cpu_count": 1,
+  "worker_cpu_seconds": 8,
+  "supervisor_cpu_seconds": 2,
+  "worker_address_space_bytes": 201326592,
+  "supervisor_address_space_bytes": 67108864,
+  "individual_file_bytes": 1048576,
+  "artifact_bytes": 65536,
+  "artifact_count": 4,
+  "captured_output_bytes": 65536,
+  "generated_file_budget_bytes": 33554432,
+  "heavy_available": false
+}
