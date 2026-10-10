@@ -33,6 +33,8 @@ class ReleaseTests(unittest.TestCase):
             for block in blocks:
                 # The aggregate suite runs outside this test; avoid recursive unittest.
                 block = block.replace("python3 -B -m unittest discover -s tests -v", "")
+                for module in ("language", "pipeline", "release", "sandbox"):
+                    block = block.replace("python3 -I -B tools/verify.py . tests -v tests.test_" + module, "")
                 result = subprocess.run(["/bin/sh", "-eu", "-c", block], cwd=clean, capture_output=True, timeout=12)
                 self.assertEqual(result.returncode, 0, (block, result.stderr))
                 if "hello_world.cli show" in block:

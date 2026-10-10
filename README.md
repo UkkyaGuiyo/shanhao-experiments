@@ -11,6 +11,8 @@ AIを活用した小さな実験と、その検証結果を公開するための
 
 第 1 週 `2026-10-03`: **文字議会**。待機や無限ループで遅くしているわけではなく、各段階の成果物が次の段階に必要になる。今週は工程の無駄を増やす低負荷版。高負荷モードはない。
 
+第 2 週 `2026-10-10`: **議案言語局**。提出前に 8 語の独自辞書を生成し、11 件の議案を翻訳、逆翻訳して原案との一致を検査する。文字議会は逆翻訳された議案を採決する。辞書・翻訳・逆翻訳のどれかが欠けても表示を拒否する。前週の 55 票・成立証明・議事録は全部必要なまま。
+
 ### 0. 準備委員会
 
 必要環境: Linux、CPython **3.12.14**（検証版）、標準ライブラリだけ。CPU affinity と Unix の `resource` が使えること。依存インストール・API キー・通信・課金は不要。README 以下のコマンドは repo のルートで実行する。
@@ -32,6 +34,8 @@ python3 -B -m hello_world.cli stage proposal --run-id ceremony
 ```
 
 11 の位置番号、11 の議案番号、11 の文字コードが `.hello-world/runs/ceremony/proposal.json` に提出される。まだ表示できない。
+
+この受付の内部で辞書生成→翻訳→逆翻訳を順に実行する。`proposal.json` の `payload.language` に `dictionary`、`translated`、`backtranslated` を収録し、追加ファイルを作らず 4 成果物の上限を保つ。`s00`〜`s07` は固定文字コード集合を昇順に対応させた小さな人工語で、自然言語翻訳や外部 AI API は使わない。
 
 ### 2. 五委員会合同採決
 
@@ -80,10 +84,15 @@ assert p.returncode == 0, p.stderr.decode()
 assert p.stdout == b'HELLO WORLD\n', repr(p.stdout)
 print('12-byte audit: OK')
 PY
-python3 -B -m unittest discover -s tests -v
+python3 -I -B tools/verify.py . tests -v tests.test_language
+python3 -I -B tools/verify.py . tests -v tests.test_pipeline
+python3 -I -B tools/verify.py . tests -v tests.test_release
+python3 -I -B tools/verify.py . tests -v tests.test_sandbox
 ```
 
 全工程を 1 回で済ませたい場合の正式な受付窓口は `python3 -B -m hello_world.cli run --run-id <fresh-id>`。ファイル不足・改変・工程違いなら非 0 で終了し、最終文字列は出ない。検証失敗の書類は調査用に残す。
+
+試験は `tools/verify.py` 経由で、上記の 4 コマンドをすべて順に実行する（計 37 試験、省略なし）。単発 discover はこの環境で 10 秒上限を超えたため、上限を緩めずモジュール単位に分割した。各コマンドは同じ制限を適用し、同時には実行しない。直接関数を呼ぶ試験にも 1 CPU、192 MiB/8 CPU 秒を適用し、外側の監督に 64 MiB/2 CPU 秒、全体に 10 秒・取得出力計 64 KiB を適用する。Linux のプロセス単位 subreaper で、異常終了した試験の子孫も回収する。生成量はレビュー済み有限書込みの 8 MiB 以内の見積りと、32 MiB 予算の開始前余裕・終了後実測を照合する。OS のディスク quota ではない。機能を確認できなければ実行せず終了する。未レビューのコードを試す汎用 runner として使わない。
 
 ### 資源と安全上の限界
 
@@ -95,4 +104,4 @@ python3 -B -m unittest discover -s tests -v
 - RLIMIT_AS はプロセス別の仮想メモリ、RLIMIT_FSIZE はファイル別の制限。cgroup の全体 RAM/ディスク制限ではない
 - 同じ台帳の同時処理はロックで拒否。別々に起動した実行の合計負荷はこの上限の対象外
 
-動作設計は [docs/DESIGN.md](docs/DESIGN.md)、週次更新は [docs/WEEKLY.md](docs/WEEKLY.md)、実行順は [pipeline.json](pipeline.json)。試験結果は [docs/runs/2026-10-03.json](docs/runs/2026-10-03.json) に記録する。
+動作設計は [docs/DESIGN.md](docs/DESIGN.md)、週次更新は [docs/WEEKLY.md](docs/WEEKLY.md)、実行順は [pipeline.json](pipeline.json)。試験結果は [第 1 週](docs/runs/2026-10-03.json) と [第 2 週](docs/runs/2026-10-10.json) に記録する。

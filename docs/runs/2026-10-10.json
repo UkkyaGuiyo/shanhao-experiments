@@ -1,0 +1,217 @@
+{
+  "week": "2026-10-10",
+  "version": 2,
+  "status": "verified",
+  "base_commit": "08051f3c8bf6c9c933b66d728bf86e742667f5b0",
+  "environment": {
+    "system": "Linux",
+    "release": "6.18.44",
+    "machine": "x86_64",
+    "python": "3.12.14",
+    "dependencies": "Python standard library only"
+  },
+  "feature": "Deterministic eight-word dictionary, motion translation and exact reverse-translation witness required by the unchanged parliament; embedded in proposal.json.",
+  "smoke": {
+    "command": "python3 -I -B tools/verify.py . cli run --run-id release-audit-20261010",
+    "exit_code": 0,
+    "stdout_hex": "48454c4c4f20574f524c440a",
+    "stdout_bytes": 12,
+    "exact_output": true,
+    "tool_elapsed_seconds": 0.325236,
+    "verification": "Supervisor byte comparison and clean README subprocess assertion both passed."
+  },
+  "tests": {
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0,
+    "commands": [
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_language",
+        "exit_code": 0,
+        "passed": 5,
+        "unittest_elapsed_seconds": 5.895,
+        "tool_elapsed_seconds": 6.283951
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_pipeline",
+        "exit_code": 0,
+        "passed": 14,
+        "unittest_elapsed_seconds": 5.505,
+        "tool_elapsed_seconds": 5.779284
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_release",
+        "exit_code": 0,
+        "passed": 4,
+        "unittest_elapsed_seconds": 1.868,
+        "tool_elapsed_seconds": 2.066039
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_sandbox",
+        "exit_code": 0,
+        "passed": 14,
+        "unittest_elapsed_seconds": 4.733,
+        "tool_elapsed_seconds": 7.630287
+      }
+    ],
+    "clean_readme_reproduction": "passed: all README shell blocks from an empty temporary workspace; four aggregate test lines run separately to avoid recursion",
+    "previous_week_regression": {
+      "base_commit": "08051f3c8bf6c9c933b66d728bf86e742667f5b0",
+      "exact_blob_snapshot": true,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "unittest_elapsed_seconds": 6.606,
+      "bounded_external_wrapper": true
+    },
+    "red_green": {
+      "before_implementation": {
+        "tests": 4,
+        "expected_failures": 3,
+        "passed": 1
+      },
+      "after_implementation": {
+        "tests": 5,
+        "passed": 5,
+        "unittest_elapsed_seconds": 2.657
+      }
+    },
+    "single_discover_attempts": [
+      {
+        "workspace": "implementation checkout",
+        "exit_code": 0,
+        "passed": 37,
+        "unittest_elapsed_seconds": 8.859
+      },
+      {
+        "workspace": "clean copy",
+        "exit_code": 125,
+        "result": "10-second outer deadline during CPU-limit probe; partial, not passed"
+      },
+      {
+        "workspace": "clean copy retry, unchanged limits",
+        "exit_code": 125,
+        "result": "10-second outer deadline during timeout probe; partial, not passed"
+      }
+    ],
+    "resolution": "All 37 tests run serially as four fixed module commands, no omitted tests or raised limits. README documents why single discover is not the required command."
+  },
+  "limits": {
+    "mode": "smoke-only",
+    "wall_seconds_per_command": 10,
+    "generated_file_budget_bytes": 33554432,
+    "artifact_count_limit": 4,
+    "artifact_bytes_limit_each": 65536,
+    "captured_output_bytes_limit_per_command": 65536,
+    "four_module_retained_output": "complete normal verbose output remained below 64 KiB total; no shared global output quota claimed",
+    "observed_process_configuration": {
+      "supervisor": {
+        "address_space_bytes": 67108864,
+        "cpu_seconds": 2,
+        "cpus": [
+          0
+        ],
+        "file_bytes": 1048576
+      },
+      "worker": {
+        "address_space_bytes": 201326592,
+        "cpu_seconds": 8,
+        "cpus": [
+          0
+        ],
+        "file_bytes": 1048576
+      }
+    },
+    "live_checks": {
+      "cpu_affinity": "passed",
+      "address_space_memory_error": "passed",
+      "cpu_sigkill_at_lowered_1_second_probe": "passed",
+      "file_efbig": "passed",
+      "timeout_and_reaping": "passed",
+      "output_cap": "passed",
+      "heavy_rejected": "passed"
+    },
+    "test_wrapper": {
+      "path": "tools/verify.py",
+      "sha256": "9cc87e9f1efc2a967ff018c7f125befed0a31cbd5975359c42fee5698252e469",
+      "supervisor_address_space_bytes": 67108864,
+      "supervisor_cpu_seconds": 2,
+      "test_worker_address_space_bytes": 201326592,
+      "test_worker_cpu_seconds": 8,
+      "static_generated_allowance_bytes": 8388608,
+      "generated_accounting": "Reviewed finite writes for all four modules together below 8 MiB; preflight headroom and retained byte checks within 32 MiB, not a disk quota.",
+      "orphan_cleanup_fixture": {
+        "result": "passed",
+        "description": "Reviewed external finite fixture starts a separate-session child sleeping five seconds and deliberately fails the test. Immediate checker confirms failure status preserved and child absent before natural expiry.",
+        "wrapper_exit": 1,
+        "checker_exit": 0,
+        "elapsed_since_child_start_seconds": 0.096543,
+        "child_pid_absent": true,
+        "before_natural_exit": true
+      }
+    },
+    "isolation": "Process-local limits and reviewed finite code; no OS-wide network/filesystem or cgroup isolation"
+  },
+  "artifacts": [
+    {
+      "file": "ballot.json",
+      "bytes": 2782,
+      "sha256": "268bf9b1b31fa8ae9a01b503c2c3f05cf2fd84358fa6abacca38a0dc5c73d099"
+    },
+    {
+      "file": "certificate.json",
+      "bytes": 2636,
+      "sha256": "28ad43184f7c77e2edf15cefdfb6b89470b3566581c60ca696d1f26123196918"
+    },
+    {
+      "file": "minutes.json",
+      "bytes": 1450,
+      "sha256": "90962d242af8c6cf3466972514488597c7ab7d75810fd356eeab81aa2b637c18"
+    },
+    {
+      "file": "proposal.json",
+      "bytes": 2042,
+      "sha256": "0c70af56b03e946b81796bc602b339f6b0eb7b474213687021505cd0fa92546d"
+    }
+  ],
+  "generated_artifact_bytes": 8910,
+  "release_guards": {
+    "duplicate_week": "passed",
+    "remote_conflict": "passed",
+    "stop": "passed",
+    "no_lock": "passed",
+    "test_or_review_failure": "passed"
+  },
+  "review": {
+    "pre_execution_static_review": "completed independently for baseline, new language code, tests and wrapper before each execution scope",
+    "final_release_review": "Independent final source, artifact hashes and execution-record review completed: no blocking findings. Remote freshness, exclusivity, stop status and publication still require final checks."
+  },
+  "ci": "No pre-existing workflow in source snapshot; none added",
+  "tested_files_sha256": {
+    "README.md": "6986790e0b99e22b9fe9260b9bdb59f92afb16f7e85ea65b60709a184b828e5a",
+    "hello_world/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hello_world/cli.py": "abd1d813fbb7ba0cc02404b3895c94f3db43ec67f6b5e892a4b9e9b34fa89e20",
+    "hello_world/layers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hello_world/layers/w20261003.py": "ed0c797a82286d3cfabe6ebae1501a2a077eb0f00be309e1a26e67ad01b12fc8",
+    "hello_world/layers/w20261010.py": "dd83e7007310072cd6687b420331d58e76805a5f7d822c59ffdd1f9e8629849e",
+    "hello_world/limits.json": "8870076fb382c17ccd038ab341ab05cbcd98ec5397a38a6c457612eaa2373127",
+    "hello_world/limits.py": "681439cc8f2f60a08b7067342c39f667503ab25314b0dda279c450c44f066901",
+    "hello_world/pipeline.py": "c3ca80b7ec6f87a4ed9b3476e05e8437fb7a6cca8bd6e21dcb9a58a711f58d39",
+    "hello_world/release.py": "ca2227936446ae5f682850b93f6fca4e79111bb4b64383aaf8137ba59178d906",
+    "hello_world/safeio.py": "65db8fdc0b9baee663e7bde2b7773c781d6e187f68933f17031b06730e74d621",
+    "hello_world/sandbox.py": "a527c2c4d61346ea49b46727f210f9d7bbf0f4feb750c04a6271cf70a70f5de7",
+    "hello_world/storage.py": "800882cee6b71e6b2f06b640318ceb219aabe29a34e81fab3bb6211afe71a8a6",
+    "hello_world/worker.py": "0eb9f4d0024bccf757061bf9b46e8ae3766db5922b294596ec82ecd7b9d83cee",
+    "pipeline.json": "72cc11d3807a1aa4b75d1d4dc9b53fc89b7301d412c214b3ae0f4025edefe074",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/config_probe.py": "6efe46a79eb3570652c2aa4f139c827560332e89ce55be09b4d9b381992c09ba",
+    "tests/helpers.py": "c9989b6690723728663a9eadda2ee54d87c464a787543cd918bcd381b3936dd5",
+    "tests/runner_probe.py": "ef4acb16a77ea2e105213e0207772e0a417d4ded8220cacf398bbc454d887d66",
+    "tests/test_language.py": "2c5c385eb339815e7f3a706eeefa012219625ea2fb0e47f59ef12c6e744c1d7c",
+    "tests/test_pipeline.py": "1e62cded62b98fe4f1177dc8396d8a3acd971810d1d7d8f736adbcae7f85abaa",
+    "tests/test_release.py": "ea2692df28d239f663a8cb71c1d52567add0820a91116b275f1a00621bed1ba1",
+    "tests/test_sandbox.py": "ffb1431f41aa14520b32d0c7b394768980c6336602b7735dfd01825e78287396",
+    "tests/worker_probe.py": "4306547bbd8cf3c2a6a333c84b8e4c1e008a1bb60d3313db6bb0656b05962ba8",
+    "tools/verify.py": "9cc87e9f1efc2a967ff018c7f125befed0a31cbd5975359c42fee5698252e469"
+  }
+}

@@ -2,14 +2,24 @@
 import hashlib
 import json
 from hello_world.layers import w20261003 as layer
+from hello_world.layers import w20261010 as language
 from hello_world.storage import ArtifactStore, ROOT, STAGES, canonical
 from hello_world.safeio import read_regular
 
 EXPECTED_MANIFEST = {
-    "version": 1, "seed": layer.SEED, "weeks": [layer.WEEK],
-    "steps": [{"id": stage, "week": layer.WEEK, "module": "w20261003",
-               "requires": STAGES[i - 1] if i else None} for i, stage in enumerate(STAGES)],
+    "version": 2, "seed": layer.SEED, "weeks": [layer.WEEK, language.WEEK],
+    "steps": [
+        {"id": "dictionary", "week": language.WEEK, "module": "w20261010", "requires": None},
+        {"id": "translation", "week": language.WEEK, "module": "w20261010", "requires": "dictionary"},
+        {"id": "roundtrip", "week": language.WEEK, "module": "w20261010", "requires": "translation"},
+        {"id": "proposal", "week": layer.WEEK, "module": "w20261003", "requires": "roundtrip"},
+        {"id": "ballot", "week": layer.WEEK, "module": "w20261003", "requires": "proposal"},
+        {"id": "certificate", "week": layer.WEEK, "module": "w20261003", "requires": "ballot"},
+        {"id": "minutes", "week": layer.WEEK, "module": "w20261003", "requires": "certificate"},
+    ],
 }
+
+BUILDERS = layer.BUILDERS | {"proposal": lambda _: language.proposal(), "ballot": language.ballot}
 
 def load_manifest():
     path = ROOT / "pipeline.json"
@@ -21,7 +31,7 @@ def load_manifest():
 def envelope(stage, previous):
     return {"stage": stage, "week": layer.WEEK, "seed": layer.SEED,
             "input_sha256": hashlib.sha256(canonical(previous)).hexdigest(),
-            "payload": layer.BUILDERS[stage](previous["payload"] if previous else None)}
+            "payload": BUILDERS[stage](previous["payload"] if previous else None)}
 
 def verified_prefix(store, stages):
     previous = None

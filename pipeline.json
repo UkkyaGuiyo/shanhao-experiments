@@ -1,9 +1,12 @@
 {
-  "version": 1,
+  "version": 2,
   "seed": 20261003,
-  "weeks": ["2026-10-03"],
+  "weeks": ["2026-10-03", "2026-10-10"],
   "steps": [
-    {"id": "proposal", "week": "2026-10-03", "module": "w20261003", "requires": null},
+    {"id": "dictionary", "week": "2026-10-10", "module": "w20261010", "requires": null},
+    {"id": "translation", "week": "2026-10-10", "module": "w20261010", "requires": "dictionary"},
+    {"id": "roundtrip", "week": "2026-10-10", "module": "w20261010", "requires": "translation"},
+    {"id": "proposal", "week": "2026-10-03", "module": "w20261003", "requires": "roundtrip"},
     {"id": "ballot", "week": "2026-10-03", "module": "w20261003", "requires": "proposal"},
     {"id": "certificate", "week": "2026-10-03", "module": "w20261003", "requires": "ballot"},
     {"id": "minutes", "week": "2026-10-03", "module": "w20261003", "requires": "certificate"}

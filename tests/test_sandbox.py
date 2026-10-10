@@ -75,7 +75,7 @@ class SandboxTests(unittest.TestCase):
         self.assertLessEqual(len(result.stderr), 64 * 1024)
         self.assertIn(b"output budget", result.stderr)
     def test_no_network_or_child_creation_in_worker_graph(self):
-        paths = [ROOT / "hello_world" / name for name in ("worker.py", "pipeline.py", "storage.py", "limits.py", "safeio.py", "layers/w20261003.py")]
+        paths = [ROOT / "hello_world" / name for name in ("worker.py", "pipeline.py", "storage.py", "limits.py", "safeio.py", "layers/w20261003.py", "layers/w20261010.py")]
         banned = {"socket", "http", "urllib", "requests", "subprocess", "multiprocessing", "threading", "ctypes", "asyncio"}
         for path in paths:
             self.assertTrue(path.exists(), path)
