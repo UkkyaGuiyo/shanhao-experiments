@@ -13,6 +13,8 @@ AIを活用した小さな実験と、その検証結果を公開するための
 
 第 2 週 `2026-10-10`: **議案言語局**。提出前に 8 語の独自辞書を生成し、11 件の議案を翻訳、逆翻訳して原案との一致を検査する。文字議会は逆翻訳された議案を採決する。辞書・翻訳・逆翻訳のどれかが欠けても表示を拒否する。前週の 55 票・成立証明・議事録は全部必要なまま。
 
+第 3 週 `2026-10-17`: **履歴監査院**。翻訳担当とも採決担当とも別の検証器が、11 件の原案・翻訳・逆翻訳・55 票を照合し、鎖につないだ 11 枚の履歴証明を発行する。成立証明にこの履歴一式を添付し、議事録係が再監査する。証明が欠けたり変わったりすると表示できない。旧工程と 4 ファイルの上限は維持する。
+
 ### 0. 準備委員会
 
 必要環境: Linux、CPython **3.12.14**（検証版）、標準ライブラリだけ。CPU affinity と Unix の `resource` が使えること。依存インストール・API キー・通信・課金は不要。README 以下のコマンドは repo のルートで実行する。
@@ -51,7 +53,7 @@ python3 -B -m hello_world.cli stage ballot --run-id ceremony
 python3 -B -m hello_world.cli stage certificate --run-id ceremony
 ```
 
-定足数と過半数を検査し、投票のハッシュを含む `certificate.json` を発行する。ハッシュは改変検出用で、法的な署名ではない。
+この窓口内で独立した履歴検証器を通す。保存済みの原案・投票を先頭から検査した後、固定原案の翻訳記録と投票の対応を別実装で照合し、11 枚の連鎖証明を作る。定足数と過半数を検査し、投票のハッシュと必須の `payload.history` を含む `certificate.json` を発行する。ハッシュは改変検出用で、法的な署名ではない。
 
 ### 4. 議事録編纂室
 
@@ -59,7 +61,7 @@ python3 -B -m hello_world.cli stage certificate --run-id ceremony
 python3 -B -m hello_world.cli stage minutes --run-id ceremony
 ```
 
-成立証明を照合して位置順に並べ、`minutes.json` に収録する。ここまで来ても stdout は空である。
+履歴証明と 55 票を再監査し、成立証明がその投票に対応することを照合して位置順に並べ、`minutes.json` に収録する。ここまで来ても stdout は空である。
 
 ### 5. 表示許可の執行
 
@@ -85,6 +87,7 @@ assert p.stdout == b'HELLO WORLD\n', repr(p.stdout)
 print('12-byte audit: OK')
 PY
 python3 -I -B tools/verify.py . tests -v tests.test_language
+python3 -I -B tools/verify.py . tests -v tests.test_history
 python3 -I -B tools/verify.py . tests -v tests.test_pipeline
 python3 -I -B tools/verify.py . tests -v tests.test_release
 python3 -I -B tools/verify.py . tests -v tests.test_sandbox
@@ -92,7 +95,7 @@ python3 -I -B tools/verify.py . tests -v tests.test_sandbox
 
 全工程を 1 回で済ませたい場合の正式な受付窓口は `python3 -B -m hello_world.cli run --run-id <fresh-id>`。ファイル不足・改変・工程違いなら非 0 で終了し、最終文字列は出ない。検証失敗の書類は調査用に残す。
 
-試験は `tools/verify.py` 経由で、上記の 4 コマンドをすべて順に実行する（計 37 試験、省略なし）。単発 discover はこの環境で 10 秒上限を超えたため、上限を緩めずモジュール単位に分割した。各コマンドは同じ制限を適用し、同時には実行しない。直接関数を呼ぶ試験にも 1 CPU、192 MiB/8 CPU 秒を適用し、外側の監督に 64 MiB/2 CPU 秒、全体に 10 秒・取得出力計 64 KiB を適用する。Linux のプロセス単位 subreaper で、異常終了した試験の子孫も回収する。生成量はレビュー済み有限書込みの 8 MiB 以内の見積りと、32 MiB 予算の開始前余裕・終了後実測を照合する。OS のディスク quota ではない。機能を確認できなければ実行せず終了する。未レビューのコードを試す汎用 runner として使わない。
+試験は `tools/verify.py` 経由で、上記の 5 コマンドをすべて順に実行する（計 44 試験、省略なし）。単発 discover はこの環境で 10 秒上限を超えたため、上限を緩めずモジュール単位に分割した。各コマンドは同じ制限を適用し、同時には実行しない。直接関数を呼ぶ試験にも 1 CPU、192 MiB/8 CPU 秒を適用し、外側の監督に 64 MiB/2 CPU 秒、全体に 10 秒・取得出力計 64 KiB を適用する。Linux のプロセス単位 subreaper で、異常終了した試験の子孫も回収する。生成量はレビュー済み有限書込みの 8 MiB 以内の見積りと、32 MiB 予算の開始前余裕・終了後実測を照合する。OS のディスク quota ではない。機能を確認できなければ実行せず終了する。未レビューのコードを試す汎用 runner として使わない。
 
 ### 資源と安全上の限界
 
@@ -104,4 +107,4 @@ python3 -I -B tools/verify.py . tests -v tests.test_sandbox
 - RLIMIT_AS はプロセス別の仮想メモリ、RLIMIT_FSIZE はファイル別の制限。cgroup の全体 RAM/ディスク制限ではない
 - 同じ台帳の同時処理はロックで拒否。別々に起動した実行の合計負荷はこの上限の対象外
 
-動作設計は [docs/DESIGN.md](docs/DESIGN.md)、週次更新は [docs/WEEKLY.md](docs/WEEKLY.md)、実行順は [pipeline.json](pipeline.json)。試験結果は [第 1 週](docs/runs/2026-10-03.json) と [第 2 週](docs/runs/2026-10-10.json) に記録する。
+動作設計は [docs/DESIGN.md](docs/DESIGN.md)、週次更新は [docs/WEEKLY.md](docs/WEEKLY.md)、実行順は [pipeline.json](pipeline.json)。試験結果は [第 1 週](docs/runs/2026-10-03.json) 、[第 2 週](docs/runs/2026-10-10.json) と [第 3 週](docs/runs/2026-10-17.json) に記録する。

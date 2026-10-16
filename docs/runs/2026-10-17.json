@@ -1,0 +1,174 @@
+{
+  "week": "2026-10-17",
+  "version": 3,
+  "status": "verified",
+  "base_commit": "fedd74babf288165e95b1e49ee1cb404313599d3",
+  "environment": {
+    "system": "Linux",
+    "release": "6.18.44",
+    "machine": "x86_64",
+    "python": "3.12.14",
+    "dependencies": "Python standard library only"
+  },
+  "feature": "Independent translation-and-vote history audit; eleven chained receipts embedded in certificate.json and required by minutes. All prior stages preserved.",
+  "smoke": {
+    "command": "python3 -I -B tools/verify.py . cli run --run-id release-audit-20261017",
+    "exit_code": 0,
+    "stdout_hex": "48454c4c4f20574f524c440a",
+    "stdout_bytes": 12,
+    "exact_output": true,
+    "verification": "Product supervisor compares exact bytes; full tests and clean README subprocess assertion passed.",
+    "limits_and_smoke_combined_tool_elapsed_seconds": 0.08032
+  },
+  "tests": {
+    "passed": 44,
+    "failed": 0,
+    "skipped": 0,
+    "commands": [
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_history",
+        "exit_code": 0,
+        "passed": 7,
+        "unittest_elapsed_seconds": 0.051
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_language",
+        "exit_code": 0,
+        "passed": 5,
+        "unittest_elapsed_seconds": 0.683
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_pipeline",
+        "exit_code": 0,
+        "passed": 14,
+        "unittest_elapsed_seconds": 0.773
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_release",
+        "exit_code": 0,
+        "passed": 4,
+        "unittest_elapsed_seconds": 0.554
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_sandbox",
+        "exit_code": 0,
+        "passed": 14,
+        "unittest_elapsed_seconds": 2.616
+      }
+    ],
+    "clean_readme_reproduction": "passed: all README shell blocks in an empty owned temporary workspace; five aggregate test commands run separately to avoid recursion",
+    "previous_week_regression": {
+      "commit": "fedd74babf288165e95b1e49ee1cb404313599d3",
+      "snapshot": "git archive of exact main before changes, independent clean directory",
+      "passed": 37,
+      "failed": 0,
+      "skipped": 0,
+      "bounded_wrapper": true,
+      "module_elapsed_seconds": {
+        "language": 0.688,
+        "pipeline": 0.836,
+        "release": 0.647,
+        "sandbox": 2.601
+      }
+    },
+    "red_green": {
+      "before_implementation": {
+        "tests": 7,
+        "expected_failures": 7,
+        "reason": "missing history witness",
+        "unittest_elapsed_seconds": 0.009
+      },
+      "after_implementation": {
+        "tests": 7,
+        "passed": 7,
+        "unittest_elapsed_seconds": 0.051
+      }
+    }
+  },
+  "limits": {
+    "unchanged": true,
+    "wall_seconds_per_command": 10,
+    "cpu_count": 1,
+    "supervisor_address_space_bytes": 67108864,
+    "supervisor_cpu_seconds": 2,
+    "worker_address_space_bytes": 201326592,
+    "worker_cpu_seconds": 8,
+    "artifact_count_limit": 4,
+    "artifact_bytes_limit_each": 65536,
+    "individual_file_limit_bytes": 1048576,
+    "captured_output_bytes_limit_per_command": 65536,
+    "generated_file_budget_bytes": 33554432,
+    "static_generated_allowance_bytes": 8388608,
+    "observed_affinity": [
+      0
+    ],
+    "wrapper_sha256": "9cc87e9f1efc2a967ff018c7f125befed0a31cbd5975359c42fee5698252e469",
+    "live_checks": "passed: affinity, memory rejection, lowered one-second CPU probe, file cap, timeout/reaping, output cap, heavy rejection, locking",
+    "accounting": "Per-process/per-command limits; finite reviewed writes plus preflight and final measurement, not cgroup aggregate or disk quota. No OS-wide network/filesystem isolation. Tests use owned fixtures only."
+  },
+  "artifacts": [
+    {
+      "file": "ballot.json",
+      "bytes": 2782,
+      "sha256": "268bf9b1b31fa8ae9a01b503c2c3f05cf2fd84358fa6abacca38a0dc5c73d099"
+    },
+    {
+      "file": "certificate.json",
+      "bytes": 12137,
+      "sha256": "08d556aec4bf40c86347a41f0493c6155d784011e1faf8438decc07d8c49a917"
+    },
+    {
+      "file": "minutes.json",
+      "bytes": 1450,
+      "sha256": "b1c0538cbb285dc16d0a91db74580b4c8c2466d010093ef284b3c18aefc1fdaf"
+    },
+    {
+      "file": "proposal.json",
+      "bytes": 2042,
+      "sha256": "0c70af56b03e946b81796bc602b339f6b0eb7b474213687021505cd0fa92546d"
+    }
+  ],
+  "generated_artifact_bytes": 18411,
+  "release_guards": {
+    "duplicate_week": "passed",
+    "remote_conflict": "passed",
+    "stop": "passed",
+    "no_lock": "passed",
+    "test_or_review_failure": "passed"
+  },
+  "review": {
+    "pre_execution_static_review": "Independent baseline, new tests and actual week-three product diff approved before corresponding execution. No blocking findings.",
+    "final_release_review": "Independent final source, documentation, recorded source hashes, artifact hashes/sizes and execution evidence reviewed: no release-blocking findings. Publication requires fresh remote, exclusivity and stop checks."
+  },
+  "ci": "No pre-existing workflow in source snapshot; none added",
+  "tested_files_sha256": {
+    "README.md": "aaf41cd655de7945165e4616c9d399c2c631b6a1f097e47d255117f4d04f9edd",
+    "hello_world/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hello_world/cli.py": "abd1d813fbb7ba0cc02404b3895c94f3db43ec67f6b5e892a4b9e9b34fa89e20",
+    "hello_world/history_verifier.py": "242a81853ed62022af2eeb628871f7a1583dace5dbcf7cd132198702e2a3d622",
+    "hello_world/layers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hello_world/layers/w20261003.py": "ed0c797a82286d3cfabe6ebae1501a2a077eb0f00be309e1a26e67ad01b12fc8",
+    "hello_world/layers/w20261010.py": "dd83e7007310072cd6687b420331d58e76805a5f7d822c59ffdd1f9e8629849e",
+    "hello_world/layers/w20261017.py": "ab947ccc9a6117dabb73272bb5b92778fbad38adbfe859bb941be216e5e02060",
+    "hello_world/limits.json": "8870076fb382c17ccd038ab341ab05cbcd98ec5397a38a6c457612eaa2373127",
+    "hello_world/limits.py": "681439cc8f2f60a08b7067342c39f667503ab25314b0dda279c450c44f066901",
+    "hello_world/pipeline.py": "0eac986f3c65dabe09b355d3062087122c65d91d3d3c09083c5bf5d8b89bf785",
+    "hello_world/release.py": "ca2227936446ae5f682850b93f6fca4e79111bb4b64383aaf8137ba59178d906",
+    "hello_world/safeio.py": "65db8fdc0b9baee663e7bde2b7773c781d6e187f68933f17031b06730e74d621",
+    "hello_world/sandbox.py": "a527c2c4d61346ea49b46727f210f9d7bbf0f4feb750c04a6271cf70a70f5de7",
+    "hello_world/storage.py": "800882cee6b71e6b2f06b640318ceb219aabe29a34e81fab3bb6211afe71a8a6",
+    "hello_world/worker.py": "0eb9f4d0024bccf757061bf9b46e8ae3766db5922b294596ec82ecd7b9d83cee",
+    "pipeline.json": "353f59a296c36d8f4072255893b403c6cf87f1b78c68192f2d73d8c9f0edd73a",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/config_probe.py": "6efe46a79eb3570652c2aa4f139c827560332e89ce55be09b4d9b381992c09ba",
+    "tests/helpers.py": "c9989b6690723728663a9eadda2ee54d87c464a787543cd918bcd381b3936dd5",
+    "tests/runner_probe.py": "ef4acb16a77ea2e105213e0207772e0a417d4ded8220cacf398bbc454d887d66",
+    "tests/test_history.py": "fe351add209fc4f8473eb9290689bd555ca9cab9cad7d46ffa2a8d8d9c30959f",
+    "tests/test_language.py": "69c8f9610502107753b80c4d5c65317443e4e371a87fe8c7fae2a0895abe91a5",
+    "tests/test_pipeline.py": "1e62cded62b98fe4f1177dc8396d8a3acd971810d1d7d8f736adbcae7f85abaa",
+    "tests/test_release.py": "bde316a35484d5fb513a57e1e6126f072129e29a9e51b817e217329516c5e60f",
+    "tests/test_sandbox.py": "4b331741d6e8439b7de5f1979e51d16fbe8f03b5be2943b4e02781a7c2e39f4e",
+    "tests/worker_probe.py": "4306547bbd8cf3c2a6a333c84b8e4c1e008a1bb60d3313db6bb0656b05962ba8",
+    "tools/verify.py": "9cc87e9f1efc2a967ff018c7f125befed0a31cbd5975359c42fee5698252e469"
+  }
+}

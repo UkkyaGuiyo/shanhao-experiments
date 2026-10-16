@@ -3,23 +3,26 @@ import hashlib
 import json
 from hello_world.layers import w20261003 as layer
 from hello_world.layers import w20261010 as language
+from hello_world.layers import w20261017 as history
 from hello_world.storage import ArtifactStore, ROOT, STAGES, canonical
 from hello_world.safeio import read_regular
 
 EXPECTED_MANIFEST = {
-    "version": 2, "seed": layer.SEED, "weeks": [layer.WEEK, language.WEEK],
+    "version": 3, "seed": layer.SEED, "weeks": [layer.WEEK, language.WEEK, history.WEEK],
     "steps": [
         {"id": "dictionary", "week": language.WEEK, "module": "w20261010", "requires": None},
         {"id": "translation", "week": language.WEEK, "module": "w20261010", "requires": "dictionary"},
         {"id": "roundtrip", "week": language.WEEK, "module": "w20261010", "requires": "translation"},
         {"id": "proposal", "week": layer.WEEK, "module": "w20261003", "requires": "roundtrip"},
         {"id": "ballot", "week": layer.WEEK, "module": "w20261003", "requires": "proposal"},
-        {"id": "certificate", "week": layer.WEEK, "module": "w20261003", "requires": "ballot"},
+        {"id": "history", "week": history.WEEK, "module": "w20261017", "requires": "ballot"},
+        {"id": "certificate", "week": layer.WEEK, "module": "w20261003", "requires": "history"},
         {"id": "minutes", "week": layer.WEEK, "module": "w20261003", "requires": "certificate"},
     ],
 }
 
-BUILDERS = layer.BUILDERS | {"proposal": lambda _: language.proposal(), "ballot": language.ballot}
+BUILDERS = layer.BUILDERS | {"proposal": lambda _: language.proposal(), "ballot": language.ballot,
+                             "certificate": history.certificate, "minutes": history.minutes}
 
 def load_manifest():
     path = ROOT / "pipeline.json"

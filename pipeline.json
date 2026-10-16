@@ -1,14 +1,59 @@
 {
-  "version": 2,
+  "version": 3,
   "seed": 20261003,
-  "weeks": ["2026-10-03", "2026-10-10"],
+  "weeks": [
+    "2026-10-03",
+    "2026-10-10",
+    "2026-10-17"
+  ],
   "steps": [
-    {"id": "dictionary", "week": "2026-10-10", "module": "w20261010", "requires": null},
-    {"id": "translation", "week": "2026-10-10", "module": "w20261010", "requires": "dictionary"},
-    {"id": "roundtrip", "week": "2026-10-10", "module": "w20261010", "requires": "translation"},
-    {"id": "proposal", "week": "2026-10-03", "module": "w20261003", "requires": "roundtrip"},
-    {"id": "ballot", "week": "2026-10-03", "module": "w20261003", "requires": "proposal"},
-    {"id": "certificate", "week": "2026-10-03", "module": "w20261003", "requires": "ballot"},
-    {"id": "minutes", "week": "2026-10-03", "module": "w20261003", "requires": "certificate"}
+    {
+      "id": "dictionary",
+      "week": "2026-10-10",
+      "module": "w20261010",
+      "requires": null
+    },
+    {
+      "id": "translation",
+      "week": "2026-10-10",
+      "module": "w20261010",
+      "requires": "dictionary"
+    },
+    {
+      "id": "roundtrip",
+      "week": "2026-10-10",
+      "module": "w20261010",
+      "requires": "translation"
+    },
+    {
+      "id": "proposal",
+      "week": "2026-10-03",
+      "module": "w20261003",
+      "requires": "roundtrip"
+    },
+    {
+      "id": "ballot",
+      "week": "2026-10-03",
+      "module": "w20261003",
+      "requires": "proposal"
+    },
+    {
+      "id": "history",
+      "week": "2026-10-17",
+      "module": "w20261017",
+      "requires": "ballot"
+    },
+    {
+      "id": "certificate",
+      "week": "2026-10-03",
+      "module": "w20261003",
+      "requires": "history"
+    },
+    {
+      "id": "minutes",
+      "week": "2026-10-03",
+      "module": "w20261003",
+      "requires": "certificate"
+    }
   ]
 }
