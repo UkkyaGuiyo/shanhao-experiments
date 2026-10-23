@@ -15,6 +15,8 @@ AIを活用した小さな実験と、その検証結果を公開するための
 
 第 3 週 `2026-10-17`: **履歴監査院**。翻訳担当とも採決担当とも別の検証器が、11 件の原案・翻訳・逆翻訳・55 票を照合し、鎖につないだ 11 枚の履歴証明を発行する。成立証明にこの履歴一式を添付し、議事録係が再監査する。証明が欠けたり変わったりすると表示できない。旧工程と 4 ファイルの上限は維持する。
 
+第 4 週 `2026-10-24`: **活字穿孔局**。議事録の11文字を、それぞれ7個の穴と検査用の偶奇値を持つカードに打ち抜く。表示器は議事録の文字を直接印字せず、このカードを読み戻して出力する。カードが欠ける、順序が変わる、穴・偶奇値・成立証明番号が変わると表示を拒否する。旧工程はすべて残し、カードは既存の議事録ファイル内に格納する。
+
 ### 0. 準備委員会
 
 必要環境: Linux、CPython **3.12.14**（検証版）、標準ライブラリだけ。CPU affinity と Unix の `resource` が使えること。依存インストール・API キー・通信・課金は不要。README 以下のコマンドは repo のルートで実行する。
@@ -61,7 +63,7 @@ python3 -B -m hello_world.cli stage certificate --run-id ceremony
 python3 -B -m hello_world.cli stage minutes --run-id ceremony
 ```
 
-履歴証明と 55 票を再監査し、成立証明がその投票に対応することを照合して位置順に並べ、`minutes.json` に収録する。ここまで来ても stdout は空である。
+履歴証明と 55 票を再監査し、成立証明がその投票に対応することを照合して位置順に並べ、`minutes.json` に収録する。ここまで来ても stdout は空である。最後に活字穿孔局が11枚のカードを作り、同じ `minutes.json` の `payload.punchcards` に格納する。各カードは位置、MSB先頭の7ビット、偶奇値、成立証明番号を持つ。
 
 ### 5. 表示許可の執行
 
@@ -69,7 +71,7 @@ python3 -B -m hello_world.cli stage minutes --run-id ceremony
 python3 -B -m hello_world.cli show --run-id ceremony
 ```
 
-ここで初めて stdout に `HELLO WORLD` と LF、合計 12 バイトが出る。コード 0 が正常終了。進捗・診断は stderr にだけ出る。
+議事録とカードを照合し、検証済みカードの穴から文字を復号する。ここで初めて stdout に `HELLO WORLD` と LF、合計 12 バイトが出る。コード 0 が正常終了。進捗・診断は stderr にだけ出る。
 
 ### 6. 全工程 smoke と出力監査
 
@@ -88,6 +90,7 @@ print('12-byte audit: OK')
 PY
 python3 -I -B tools/verify.py . tests -v tests.test_language
 python3 -I -B tools/verify.py . tests -v tests.test_history
+python3 -I -B tools/verify.py . tests -v tests.test_punchcards
 python3 -I -B tools/verify.py . tests -v tests.test_pipeline
 python3 -I -B tools/verify.py . tests -v tests.test_release
 python3 -I -B tools/verify.py . tests -v tests.test_sandbox
@@ -95,7 +98,7 @@ python3 -I -B tools/verify.py . tests -v tests.test_sandbox
 
 全工程を 1 回で済ませたい場合の正式な受付窓口は `python3 -B -m hello_world.cli run --run-id <fresh-id>`。ファイル不足・改変・工程違いなら非 0 で終了し、最終文字列は出ない。検証失敗の書類は調査用に残す。
 
-試験は `tools/verify.py` 経由で、上記の 5 コマンドをすべて順に実行する（計 44 試験、省略なし）。単発 discover はこの環境で 10 秒上限を超えたため、上限を緩めずモジュール単位に分割した。各コマンドは同じ制限を適用し、同時には実行しない。直接関数を呼ぶ試験にも 1 CPU、192 MiB/8 CPU 秒を適用し、外側の監督に 64 MiB/2 CPU 秒、全体に 10 秒・取得出力計 64 KiB を適用する。Linux のプロセス単位 subreaper で、異常終了した試験の子孫も回収する。生成量はレビュー済み有限書込みの 8 MiB 以内の見積りと、32 MiB 予算の開始前余裕・終了後実測を照合する。OS のディスク quota ではない。機能を確認できなければ実行せず終了する。未レビューのコードを試す汎用 runner として使わない。
+試験は `tools/verify.py` 経由で、上記の 6 コマンドをすべて順に実行する（計 50 試験、省略なし）。単発 discover はこの環境で 10 秒上限を超えたため、上限を緩めずモジュール単位に分割した。各コマンドは同じ制限を適用し、同時には実行しない。直接関数を呼ぶ試験にも 1 CPU、192 MiB/8 CPU 秒を適用し、外側の監督に 64 MiB/2 CPU 秒、全体に 10 秒・取得出力計 64 KiB を適用する。Linux のプロセス単位 subreaper で、異常終了した試験の子孫も回収する。生成量はレビュー済み有限書込みの 8 MiB 以内の見積りと、32 MiB 予算の開始前余裕・終了後実測を照合する。OS のディスク quota ではない。機能を確認できなければ実行せず終了する。未レビューのコードを試す汎用 runner として使わない。
 
 ### 資源と安全上の限界
 
@@ -107,4 +110,4 @@ python3 -I -B tools/verify.py . tests -v tests.test_sandbox
 - RLIMIT_AS はプロセス別の仮想メモリ、RLIMIT_FSIZE はファイル別の制限。cgroup の全体 RAM/ディスク制限ではない
 - 同じ台帳の同時処理はロックで拒否。別々に起動した実行の合計負荷はこの上限の対象外
 
-動作設計は [docs/DESIGN.md](docs/DESIGN.md)、週次更新は [docs/WEEKLY.md](docs/WEEKLY.md)、実行順は [pipeline.json](pipeline.json)。試験結果は [第 1 週](docs/runs/2026-10-03.json) 、[第 2 週](docs/runs/2026-10-10.json) と [第 3 週](docs/runs/2026-10-17.json) に記録する。
+動作設計は [docs/DESIGN.md](docs/DESIGN.md)、週次更新は [docs/WEEKLY.md](docs/WEEKLY.md)、実行順は [pipeline.json](pipeline.json)。試験結果は [第 1 週](docs/runs/2026-10-03.json) 、[第 2 週](docs/runs/2026-10-10.json) 、[第 3 週](docs/runs/2026-10-17.json) と [第 4 週](docs/runs/2026-10-24.json) に記録する。

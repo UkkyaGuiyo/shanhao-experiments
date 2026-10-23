@@ -1,10 +1,11 @@
 {
-  "version": 3,
+  "version": 4,
   "seed": 20261003,
   "weeks": [
     "2026-10-03",
     "2026-10-10",
-    "2026-10-17"
+    "2026-10-17",
+    "2026-10-24"
   ],
   "steps": [
     {
@@ -54,6 +55,12 @@
       "week": "2026-10-03",
       "module": "w20261003",
       "requires": "certificate"
+    },
+    {
+      "id": "punchcards",
+      "week": "2026-10-24",
+      "module": "w20261024",
+      "requires": "minutes"
     }
   ]
 }

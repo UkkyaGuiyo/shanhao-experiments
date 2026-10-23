@@ -18,7 +18,7 @@
 3. 新しい週モジュールと、その必須成果物を後段が消費する経路を 1 つ追加する。`pipeline.json` の登録を更新し、旧工程を残す。固定入力・固定 seed を保つ
 4. 正常出力、再現性、新成果物の欠落・変更、順序違い、symlink/path、重複週、競合、停止、排他、資源制限をテストする。先に失敗を確認し、実装後に成功させる
 5. 実行前に差分・追加依存・テスト用の負荷処理をレビューする。任意コードやネット接続を扱う runner に拡張しない
-6. README 記載の `tools/verify.py` 経由の 5 モジュール全件試験と README の空の作業領域からの実行を検証。内部で unittest 全件を呼び、直接関数試験にも制限を適用する。各実行の 10 秒・プロセス別予算を守る。前週完成版の回帰試験を実行する（第 1 週には前週なし）
+6. README 記載の `tools/verify.py` 経由の 6 モジュール全件試験と README の空の作業領域からの実行を検証。内部で unittest 全件を呼び、直接関数試験にも制限を適用する。各実行の 10 秒・プロセス別予算を守る。前週完成版の回帰試験を実行する（第 1 週には前週なし）
 7. `docs/runs/<week>.json` に元 SHA、版、環境、コマンド、終了コード、出力照合、所要時間、資源検証、レビュー結果を記録する。未実施は未実施とする
 8. 公開直前に最新 remote SHA を取り直す。起点と異なる、停止が入った、試験失敗、レビュー未完了なら公開しない。`hello_world.release.publication_allowed` はこの判定の純粋関数。ネット通信や実際の公開は行わない
 9. `force` なしの通常 fast-forward で更新する。更新中に競合した場合は停止。ユーザー編集を上書きしない
@@ -28,9 +28,11 @@
 
 - 製品: `python3 -B -m hello_world.cli run --run-id <fresh-id>`
 - プロセス制限確認: `python3 -B -m hello_world.cli limits --run-id <fresh-id>`
-- 回帰: README の `tools/verify.py` による 5 コマンドすべて（language / history / pipeline / release / sandbox）
+- 回帰: README の `tools/verify.py` による 6 コマンドすべて（language / history / punchcards / pipeline / release / sandbox）
 - 順序・依存: `pipeline.json`
 - 安全条件: `docs/DESIGN.md` と `hello_world/limits.json`
 - 完成記録: `docs/runs/<scheduled-JST-date>.json`
 
 新しい認証・課金・権限・規約同意や上限拡大が必要なら、先に確認する。外部依存は不可欠な場合だけ、固定版・入手元・ライセンス・理由を記録する。repo のライセンスは追加・変更しない。公開内容は作品の仕様と操作情報のみ。会話、秘密、個人情報を含めない。
+
+第4週 `2026-10-24` は活字穿孔局。従来の議事録を7ビットカードへ変換し、表示がその復号を必須とする。物理成果物数と旧工程は維持。次週も完成記録を照合し、重複追加しない。

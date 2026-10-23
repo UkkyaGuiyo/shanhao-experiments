@@ -4,11 +4,12 @@ import json
 from hello_world.layers import w20261003 as layer
 from hello_world.layers import w20261010 as language
 from hello_world.layers import w20261017 as history
+from hello_world.layers import w20261024 as typesetter
 from hello_world.storage import ArtifactStore, ROOT, STAGES, canonical
 from hello_world.safeio import read_regular
 
 EXPECTED_MANIFEST = {
-    "version": 3, "seed": layer.SEED, "weeks": [layer.WEEK, language.WEEK, history.WEEK],
+    "version": 4, "seed": layer.SEED, "weeks": [layer.WEEK, language.WEEK, history.WEEK, typesetter.WEEK],
     "steps": [
         {"id": "dictionary", "week": language.WEEK, "module": "w20261010", "requires": None},
         {"id": "translation", "week": language.WEEK, "module": "w20261010", "requires": "dictionary"},
@@ -18,11 +19,12 @@ EXPECTED_MANIFEST = {
         {"id": "history", "week": history.WEEK, "module": "w20261017", "requires": "ballot"},
         {"id": "certificate", "week": layer.WEEK, "module": "w20261003", "requires": "history"},
         {"id": "minutes", "week": layer.WEEK, "module": "w20261003", "requires": "certificate"},
+        {"id": "punchcards", "week": typesetter.WEEK, "module": "w20261024", "requires": "minutes"},
     ],
 }
 
 BUILDERS = layer.BUILDERS | {"proposal": lambda _: language.proposal(), "ballot": language.ballot,
-                             "certificate": history.certificate, "minutes": history.minutes}
+                             "certificate": history.certificate, "minutes": typesetter.minutes}
 
 def load_manifest():
     path = ROOT / "pipeline.json"
@@ -60,5 +62,4 @@ def display(work_dir):
     with ArtifactStore(work_dir) as store:
         store.expect(STAGES)
         minutes = verified_prefix(store, STAGES)
-    output = "".join(entry["character"] for entry in minutes["payload"]["entries"])
-    return output.encode("ascii") + b"\n"
+    return typesetter.decode(minutes["payload"])

@@ -1,0 +1,178 @@
+{
+  "week": "2026-10-24",
+  "version": 4,
+  "status": "verified",
+  "base_commit": "dadccf9c11f9bf12f7682cce2b247da38cdc9ea1",
+  "environment": {
+    "system": "Linux",
+    "release": "6.18.55",
+    "python": "3.12.14",
+    "dependencies": "standard library only"
+  },
+  "feature": "Mandatory eleven-card, seven-bit typesetting after the unchanged minutes compilation; output decodes verified cards, never directly prints entry characters.",
+  "smoke": {
+    "command": "python3 -I -B tools/verify.py . cli show --run-id release-audit-20261024",
+    "exit_code": 0,
+    "stdout_hex": "48454c4c4f20574f524c440a",
+    "stdout_bytes": 12,
+    "exact_output": true,
+    "wall_seconds": 0.103954
+  },
+  "tests": {
+    "passed": 50,
+    "failed": 0,
+    "skipped": 0,
+    "commands": [
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_punchcards",
+        "passed": 6,
+        "exit_code": 0,
+        "unittest_elapsed_seconds": 0.057
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_language",
+        "passed": 5,
+        "exit_code": 0,
+        "unittest_elapsed_seconds": 0.687
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_history",
+        "passed": 7,
+        "exit_code": 0,
+        "unittest_elapsed_seconds": 0.051
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_pipeline",
+        "passed": 14,
+        "exit_code": 0,
+        "unittest_elapsed_seconds": 0.849
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_release",
+        "passed": 4,
+        "exit_code": 0,
+        "unittest_elapsed_seconds": 0.55
+      },
+      {
+        "command": "python3 -I -B tools/verify.py . tests -v tests.test_sandbox",
+        "passed": 14,
+        "exit_code": 0,
+        "unittest_elapsed_seconds": 2.67
+      }
+    ],
+    "clean_readme_reproduction": "PASS: all executable README blocks in fresh owned temporary checkout, six test commands independently executed to avoid recursion",
+    "red_green": {
+      "before_pipeline_integration": {
+        "tests": 5,
+        "failed": 4,
+        "passed": 1,
+        "reason": "mandatory punchcards absent",
+        "seconds": 0.009
+      },
+      "after_integration": {
+        "tests": 6,
+        "passed": 6
+      }
+    },
+    "previous_week_regression": {
+      "commit": "dadccf9c11f9bf12f7682cce2b247da38cdc9ea1",
+      "snapshot": "independent git archive",
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0,
+      "bounded_wrapper": true,
+      "module_seconds": {
+        "language": 0.623,
+        "history": 0.048,
+        "pipeline": 0.758,
+        "release": 0.509,
+        "sandbox": 2.651
+      }
+    }
+  },
+  "limits": {
+    "mode": "smoke",
+    "wall_seconds": 10,
+    "cpu_count": 1,
+    "worker_cpu_seconds": 8,
+    "supervisor_cpu_seconds": 2,
+    "worker_address_space_bytes": 201326592,
+    "supervisor_address_space_bytes": 67108864,
+    "individual_file_bytes": 1048576,
+    "artifact_bytes": 65536,
+    "artifact_count": 4,
+    "captured_output_bytes": 65536,
+    "generated_file_budget_bytes": 33554432,
+    "heavy_available": false
+  },
+  "limits_unchanged": true,
+  "limit_verification": "PASS: live process limits, single CPU [0], memory rejection, CPU probe, file bound, output bound, timeout/reaping, lock, high-load refusal. Limits are per-process/per-command, not cgroup aggregate RAM or filesystem quota.",
+  "artifacts": [
+    {
+      "file": "ballot.json",
+      "bytes": 2782,
+      "sha256": "268bf9b1b31fa8ae9a01b503c2c3f05cf2fd84358fa6abacca38a0dc5c73d099"
+    },
+    {
+      "file": "certificate.json",
+      "bytes": 12137,
+      "sha256": "08d556aec4bf40c86347a41f0493c6155d784011e1faf8438decc07d8c49a917"
+    },
+    {
+      "file": "minutes.json",
+      "bytes": 2962,
+      "sha256": "d0a7be4e493c70596d5616ddfa51e5167f8889e2613ae44d84838963dd0d8a3b"
+    },
+    {
+      "file": "proposal.json",
+      "bytes": 2042,
+      "sha256": "0c70af56b03e946b81796bc602b339f6b0eb7b474213687021505cd0fa92546d"
+    }
+  ],
+  "generated_artifact_bytes": 19923,
+  "review": {
+    "pre_execution": "Independent static review approved baseline and new finite source/tests; no runtime communication, extra worker processes or new dependencies.",
+    "final": "PASS: independent source/docs review, 32 tested-file hashes and all 4 artifact hashes/lengths matched disk; test counts total 50, artifact bytes 19923. No blocking findings. Test execution evidence reviewed, not independently rerun by reviewer."
+  },
+  "ci": "No existing .github workflow; none added",
+  "concurrency_checks": {
+    "remote_heads": "Only main at initial check; no existing 2026-10-24 branch or run record",
+    "local": "exclusive flock on this checkout git common directory, held during verification/publication",
+    "other_known_work": "Coordinator confirmed no other shanhao-experiments task; unrelated tasks excluded",
+    "scope": "Not a distributed lock guarantee; publication additionally requires unchanged remote and non-force fast-forward."
+  },
+  "tested_files_sha256": {
+    "hello_world/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hello_world/cli.py": "abd1d813fbb7ba0cc02404b3895c94f3db43ec67f6b5e892a4b9e9b34fa89e20",
+    "hello_world/history_verifier.py": "242a81853ed62022af2eeb628871f7a1583dace5dbcf7cd132198702e2a3d622",
+    "hello_world/layers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hello_world/layers/w20261003.py": "ed0c797a82286d3cfabe6ebae1501a2a077eb0f00be309e1a26e67ad01b12fc8",
+    "hello_world/layers/w20261010.py": "dd83e7007310072cd6687b420331d58e76805a5f7d822c59ffdd1f9e8629849e",
+    "hello_world/layers/w20261017.py": "ab947ccc9a6117dabb73272bb5b92778fbad38adbfe859bb941be216e5e02060",
+    "hello_world/layers/w20261024.py": "b3ab7e4536dc703b78df67a7852d5e32fdd07f8e8a7996b7207f5b98683337d3",
+    "hello_world/limits.json": "8870076fb382c17ccd038ab341ab05cbcd98ec5397a38a6c457612eaa2373127",
+    "hello_world/limits.py": "681439cc8f2f60a08b7067342c39f667503ab25314b0dda279c450c44f066901",
+    "hello_world/pipeline.py": "474f7aca4c7dc7bd029367378aa1eb53da631d8fb953d2ea4dda82cf2e17c60b",
+    "hello_world/release.py": "ca2227936446ae5f682850b93f6fca4e79111bb4b64383aaf8137ba59178d906",
+    "hello_world/safeio.py": "65db8fdc0b9baee663e7bde2b7773c781d6e187f68933f17031b06730e74d621",
+    "hello_world/sandbox.py": "a527c2c4d61346ea49b46727f210f9d7bbf0f4feb750c04a6271cf70a70f5de7",
+    "hello_world/storage.py": "800882cee6b71e6b2f06b640318ceb219aabe29a34e81fab3bb6211afe71a8a6",
+    "hello_world/worker.py": "0eb9f4d0024bccf757061bf9b46e8ae3766db5922b294596ec82ecd7b9d83cee",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/config_probe.py": "6efe46a79eb3570652c2aa4f139c827560332e89ce55be09b4d9b381992c09ba",
+    "tests/helpers.py": "c9989b6690723728663a9eadda2ee54d87c464a787543cd918bcd381b3936dd5",
+    "tests/runner_probe.py": "ef4acb16a77ea2e105213e0207772e0a417d4ded8220cacf398bbc454d887d66",
+    "tests/test_history.py": "fe351add209fc4f8473eb9290689bd555ca9cab9cad7d46ffa2a8d8d9c30959f",
+    "tests/test_language.py": "d341dbc57e47163656323720a66b2ebdc199333f57a57727346b1a8b1cfe95a6",
+    "tests/test_pipeline.py": "1e62cded62b98fe4f1177dc8396d8a3acd971810d1d7d8f736adbcae7f85abaa",
+    "tests/test_punchcards.py": "391155df0e341dae864d4294164a6e77387c314caeffefb341148591b9954af0",
+    "tests/test_release.py": "10dfa152a190ce70085281b24d7a31ff445a450a2dce0a63bd9eed79907b2043",
+    "tests/test_sandbox.py": "58f042e1a27546d194d5c0d0caf4452dcf2ab589877d5f65656baa897d008603",
+    "tests/worker_probe.py": "4306547bbd8cf3c2a6a333c84b8e4c1e008a1bb60d3313db6bb0656b05962ba8",
+    "tools/verify.py": "9cc87e9f1efc2a967ff018c7f125befed0a31cbd5975359c42fee5698252e469",
+    "README.md": "506156ccce3a614482a61fd2577476a3e1f292bb3d38ee6db0a4e0a6bd80a378",
+    "pipeline.json": "1919da18bafdfe7065ee9cfcbae78fd65cae12034648660e854b55a5dcbb4824",
+    "docs/DESIGN.md": "6a199e1445729dff2faad7257844508a52064ca7656b8c875c38dde54fae8e1d",
+    "docs/WEEKLY.md": "68319304420a53b2f7f96f2866b0209b2c2c5f6b40b1a769a0ee8497cdff2297"
+  }
+}

@@ -10,9 +10,9 @@ from tests.helpers import cli, new_run, remove_run
 class LanguageTests(unittest.TestCase):
     def test_language_registered_before_old_stages(self):
         manifest = pipeline.load_manifest()
-        self.assertEqual(manifest['weeks'], ['2026-10-03', '2026-10-10', '2026-10-17'])
+        self.assertEqual(manifest['weeks'], ['2026-10-03', '2026-10-10', '2026-10-17', '2026-10-24'])
         self.assertEqual([s['id'] for s in manifest['steps']],
-                         ['dictionary', 'translation', 'roundtrip', 'proposal', 'ballot', 'history', 'certificate', 'minutes'])
+                         ['dictionary', 'translation', 'roundtrip', 'proposal', 'ballot', 'history', 'certificate', 'minutes', 'punchcards'])
 
     def test_roundtrip_is_required_by_parliament(self):
         payload = pipeline.envelope('proposal', None)['payload']
